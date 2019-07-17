@@ -9,14 +9,20 @@ function [row,col] = ltln2SARrowcol(TC, R, lat, lon)
 
 
 % Target coordinate (lat, long)
-point = [lat,lon];
-[point_row,point_col] = latlon2pix(R,point(1),point(2));
+[point_row,point_col] = latlon2pix(R,lat,lon);
+
+rowsMat = TC(:,:,1);
+colsMat = TC(:,:,2);
+
+indexes = sub2ind(size(rowsMat), round(point_row), round(point_col));
+row = rowsMat(indexes);
+col = colsMat(indexes);
 
 % Range pixel
-row=TC(round(point_row),round(point_col),1);
+%row=TC(round(point_row),round(point_col),1);
 
 % Azimuth pixel
-col=TC(round(point_row),round(point_col),2);
+%col=TC(round(point_row),round(point_col),2);
 
 
 end
