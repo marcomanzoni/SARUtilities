@@ -1,4 +1,4 @@
-function saveFigure(outputFolder, fileName)
+function saveFigureIntoFolder(outputFolder, fileName)
 %SAVEFIGURE Save the current figure as .fig and as a .pdf. Uses the
 %export_fig function from matlab central. Inside output folder it will
 %generate a folder named fileName with inside the two files called filename
