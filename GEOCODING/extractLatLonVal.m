@@ -18,6 +18,6 @@ P = zeros(numberOfPoints,3);
 [ind_r,ind_a] = ind2sub(size(mask),find(mask > 0));
 P(:,1)        = geocodingInfo.Lon(ind_a)/pi*180;
 P(:,2)        = geocodingInfo.Lat(ind_r)/pi*180;
-P(:,3)        = geocodedChanges(mask);
+P(:,3)        = geocodedMap(mask);
 end
 
