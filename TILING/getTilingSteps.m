@@ -3,12 +3,12 @@ function [readMatrix, writeMatrix, singleTileSize, numberOfTiles] = getTilingSte
 %to read and write a stack in the case of a processing carried out using
 %tiles.
 %   Inputs: 
-%           - Nr: number of azimuth lines. Usually the tiling happens in
+%           - Naz: number of azimuth lines. Usually the tiling happens in
 %           the azimuth, meaning that I take all the range lines from n to
 %           n+tileSize, so I segment along the azimuth
 %           - tileSize: size of a single tile. Keep in mind that the last
 %           one can be smaller
-%           - Overhead at the beginning of each tile
+%           - The size of the covariance matrix in the azimuth direction.
 %
 %   Outputs:
 %           - readMatrix: [numberOfTiles x 2] matrix. At each step of
@@ -23,7 +23,7 @@ function [readMatrix, writeMatrix, singleTileSize, numberOfTiles] = getTilingSte
 %           that I'm creating
 
 
-startReadVector     = 1:tileSize-1-(windowSize-1)/2:Naz;
+startReadVector     = 1:tileSize-1-(windowSize+1)/2:Naz;
 stopReadVector      = startReadVector+tileSize-1;
 stopReadVector(end) = Naz;
 
