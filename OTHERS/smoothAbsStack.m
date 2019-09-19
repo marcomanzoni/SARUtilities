@@ -8,9 +8,9 @@ function image = smoothAbsStack(image)
 %           image: [Nr, Na, Ni double complex] stack of images in output
 [Nr, Na, Ni] = size(image);
 % apply subsampling to scan stats
-subsampling = ceil(Nr*Na / 5e3);
+subsampling = ceil(Nr*Na / 5e2);
 % cut samples that are ovr_med above median
-overMedianFactor = 3;
+overMedianFactor = 4;
 
 for jj=1:Ni
     tmp = image(:,:,jj);
