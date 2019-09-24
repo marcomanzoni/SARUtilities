@@ -25,8 +25,8 @@ else
 end    
 
 [Nxg, Nyg] = size(xm(:,:,1));    % get image size in latlong domain
-X = xm(:,:,1);  % X coordinates of SAR image in the latlong domain
-Y = xm(:,:,2);  % Y coordinates
+X = xm(:,:,3);  % X coordinates of SAR image in the latlong domain
+Y = xm(:,:,4);  % Y coordinates
 indgood = (X(:)>1) & (Y(:)>1);  % mask with samples to use from SAR image
 
 % construct a pointer to SAR image with linear index from row-col
