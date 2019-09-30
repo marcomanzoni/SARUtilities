@@ -1,5 +1,4 @@
 function GG = getGeocodingStructure(varargin)
-
 %function GG = get_gg_snap(xm,xr,Nrg,Naz)
 %   compute geododing information
 % Ouptut:
@@ -25,14 +24,14 @@ else
 end    
 
 [Nxg, Nyg] = size(xm(:,:,1));    % get image size in latlong domain
-X = xm(:,:,3);  % X coordinates of SAR image in the latlong domain
-Y = xm(:,:,4);  % Y coordinates
+Y = int32(xm(:,:,1));  % X coordinates of SAR image in the latlong domain
+X = int32(xm(:,:,2));  % Y coordinates
 indgood = (X(:)>1) & (Y(:)>1);  % mask with samples to use from SAR image
 
 % construct a pointer to SAR image with linear index from row-col
-ind_sar_im = sub2ind([Nrg, Naz],X(indgood),Y(indgood));
+ind_sar_im = sub2ind([Nrg, Naz],Y(indgood),X(indgood));
 
-GG.xref = xr;
+GG.xref = referenceObject;
 % GG.indexes address the whole SLC space. Keep it small by using the
 % proper class
 if max(ind_sar_im) > intmax('uint32')
