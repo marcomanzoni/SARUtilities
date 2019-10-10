@@ -23,7 +23,7 @@ function [readMatrix, writeMatrix, singleTileSize, numberOfTiles] = getTilingSte
 %           that I'm creating
 
 
-startReadVector     = 1:tileSize-1-(windowSize+1)/2:Naz;
+startReadVector     = 1:tileSize-(windowSize+1)/2:Naz;
 stopReadVector      = startReadVector+tileSize-1;
 stopReadVector(end) = Naz;
 

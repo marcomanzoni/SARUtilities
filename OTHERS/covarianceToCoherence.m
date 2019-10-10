@@ -25,6 +25,6 @@ end
 H1 = H1>0;
 
 corr_diag = realsqrt(real(dataStack(1:Ni+1:end,:)));
-coherenceMatrix = dataStack ./ ((H1*corr_diag).* (H0*corr_diag));
+coherenceMatrix = dataStack ./ ((H0*corr_diag).* (H1*corr_diag));
 end
 

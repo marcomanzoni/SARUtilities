@@ -23,7 +23,7 @@ end
 H1 = H1>0;
 
 dataStack = reshape(permute(dataStack,[3 1 2]), Ni, []);
-outerProduct = (H1*dataStack).* conj(H0*dataStack);
+outerProduct = (H0*dataStack).*conj(H1*dataStack);
 clear dataStack
 
 % Going back to a 3d matrix

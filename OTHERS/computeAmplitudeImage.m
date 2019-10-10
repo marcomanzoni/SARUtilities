@@ -18,6 +18,6 @@ temp = mean(abs(dataSet(:,:,1:temporalMultilook)),3);
 Y = quantile(temp(:), 0.99);
 temp(temp>Y)=Y;
 
-multiTemporalAverage = movmean(movmean(temp, 3, 'omitnan'), 1, 2, 'omitnan');
+multiTemporalAverage = movmean(movmean(temp, 5, 'omitnan'), 1, 2, 'omitnan');
 end
 
