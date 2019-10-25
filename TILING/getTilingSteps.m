@@ -22,8 +22,16 @@ function [readMatrix, writeMatrix, singleTileSize, numberOfTiles] = getTilingSte
 %           - numberOfTiles: scalar containing the total number of tiles
 %           that I'm creating
 
+halfWindow = (windowSize-1)/2;
+readMatrix = [1, 200];
+writeMatrix = [];
+while readMatrix(end, 2)<Naz
+    writeMatrix(end+1, 1:2) = [readMatrix(end,1)+halfWindow, readMatrix(end, 2)-halfWindow]; %#ok<*AGROW>
+    readMatrix(end+1, 1:2) = [writeMatrix(end,2), writeMatrix(end,2)+tileSize-1];
+end
 
-startReadVector     = 1:tileSize-(windowSize+1)/2:Naz;
+
+startReadVector     = 1:tileSize-(windowSize-1)/2:Naz;
 stopReadVector      = startReadVector+tileSize-1;
 stopReadVector(end) = Naz;
 

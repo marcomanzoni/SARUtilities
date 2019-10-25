@@ -10,7 +10,7 @@ function image = smoothAbsStack(image)
 % apply subsampling to scan stats
 subsampling = ceil(Nr*Na / 5e1);
 % cut samples that are ovr_med above median
-overMedianFactor = 4;
+overMedianFactor = 3;
 
 for jj=1:Ni
     tmp = image(:,:,jj);
