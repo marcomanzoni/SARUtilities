@@ -15,9 +15,9 @@ if isa(dataSet, 'char') || isa(dataSet, 'string')
     dataSet = filePointer.data_stacks_calibrated(:,:,1:temporalMultilook);
 end
 temp = mean(abs(dataSet(:,:,1:temporalMultilook)),3);
-Y = quantile(temp(:), 0.99);
+Y = quantile(temp(:), 0.97);
 temp(temp>Y)=Y;
 
-multiTemporalAverage = movmean(movmean(temp, 5, 'omitnan'), 1, 2, 'omitnan');
+multiTemporalAverage = movmean(movmean(temp, 5, 'omitnan'), 1, 5, 'omitnan');
 end
 

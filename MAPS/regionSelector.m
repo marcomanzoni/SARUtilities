@@ -3,7 +3,7 @@ function pos = regionSelector(image)
 %   Detailed explanation goes here
 
 figure('units','normalized','outerposition',[0 0 1 1]); 
-imagesc(image); colorbar; colormap('gray');
+imagesc(image); colorbar; colormap('gray'); daspect([1,5,1]);
 xlabel("Azimuth pixel number");
 ylabel("Range pixel number");
 
