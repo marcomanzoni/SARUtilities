@@ -23,27 +23,32 @@ function [readMatrix, writeMatrix, singleTileSize, numberOfTiles] = getTilingSte
 %           that I'm creating
 
 halfWindow = (windowSize-1)/2;
-readMatrix = [1, 200];
+readMatrix = [1, tileSize];
 writeMatrix = [];
 while readMatrix(end, 2)<Naz
     writeMatrix(end+1, 1:2) = [readMatrix(end,1)+halfWindow, readMatrix(end, 2)-halfWindow]; %#ok<*AGROW>
     readMatrix(end+1, 1:2) = [writeMatrix(end,2), writeMatrix(end,2)+tileSize-1];
 end
+readMatrix(end,2) = Naz;
+writeMatrix(end+1, 1:2) = [readMatrix(end,1)+halfWindow, readMatrix(end, 2)-halfWindow]; %#ok<*AGROW>
+
+numberOfTiles = size(readMatrix,1);
+singleTileSize = diff(readMatrix, [],2)+1;
 
 
-startReadVector     = 1:tileSize-(windowSize-1)/2:Naz;
-stopReadVector      = startReadVector+tileSize-1;
-stopReadVector(end) = Naz;
-
-readMatrix          = [startReadVector(:), stopReadVector(:)];
-singleTileSize      = readMatrix(:,2)-readMatrix(:,1)+1;
-
-numberOfTiles       = length(singleTileSize);
-
-startWriteVector    = readMatrix(:,1) + (windowSize-1)/2;
-stopWriteVector     = readMatrix(:,2) - (windowSize-1)/2;
-
-writeMatrix         = [startWriteVector(:), stopWriteVector(:)];
+% startReadVector     = 1:tileSize-(windowSize-1)/2:Naz;
+% stopReadVector      = startReadVector+tileSize-1;
+% stopReadVector(end) = Naz;
+% 
+% readMatrix          = [startReadVector(:), stopReadVector(:)];
+% singleTileSize      = readMatrix(:,2)-readMatrix(:,1)+1;
+% 
+% numberOfTiles       = length(singleTileSize);
+% 
+% startWriteVector    = readMatrix(:,1) + (windowSize-1)/2;
+% stopWriteVector     = readMatrix(:,2) - (windowSize-1)/2;
+% 
+% writeMatrix         = [startWriteVector(:), stopWriteVector(:)];
 
 
 end
