@@ -7,6 +7,7 @@ function showRasterBasemap(raster,georefRaster, basemap, georefBasemap)
 %           (output from geotiffread)
 %           - basemap: [KxLx4 double] raster to show as a basemap. The
 %           first three layers are important since they are RGB layers.
+%           Download this map from QGIS.
 %           - [GeoRefCells] Georeference object to the raster (output from geotiffread)
 
 
@@ -19,8 +20,8 @@ geoimg = geoshow(raster, georefRaster, 'DisplayType','texturemap');
 % Fix the axis
 axis([georefRaster.LongitudeLimits(1), georefRaster.LongitudeLimits(2), georefRaster.LatitudeLimits(1), georefRaster.LatitudeLimits(2)]);
 
-geoimg.AlphaDataMapping = 'none'; % interpet alpha values as transparency values
-geoimg.FaceAlpha = 'texturemap'; % Indicate that the transparency can be different each pixel
+geoimg.AlphaDataMapping     = 'none'; % interpet alpha values as transparency values
+geoimg.FaceAlpha            = 'texturemap'; % Indicate that the transparency can be different each pixel
 alpha(geoimg,double(~isnan(raster))) % Change transparency to matrix where if data==NaN --> transparency = 1, else 0.
 end
 
