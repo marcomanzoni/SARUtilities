@@ -1,4 +1,4 @@
-function showMapWithPoints(pointsLat, pointsLon, mapTitle)
+function showMapWithPoints(pointsLat, pointsLon, mapTitle, R)
 %SHOWMAPWITHPOINTS Shows a map of points into a map gathered by open street
 %map.
 %   Inputs:
@@ -13,9 +13,16 @@ function showMapWithPoints(pointsLat, pointsLon, mapTitle)
     attribution = copyright + "OpenStreetMap contributors";
     displayName = 'Open Street Map';
     addCustomBasemap(name,url,'Attribution',attribution,'DisplayName',displayName)
-    geoscatter(pointsLat,pointsLon);
-    geolimits([min(pointsLat) max(pointsLat)],[min(pointsLon) max(pointsLon)]);
+    geoplot([R.LatitudeLimits(2) R.LatitudeLimits(2)],[R.LongitudeLimits(1) R.LongitudeLimits(2)],'b', ...
+        [R.LatitudeLimits(2) R.LatitudeLimits(1)],[R.LongitudeLimits(1) R.LongitudeLimits(1)],'b',...
+        [R.LatitudeLimits(1) R.LatitudeLimits(1)],[R.LongitudeLimits(1) R.LongitudeLimits(2)],'b',...
+        [R.LatitudeLimits(1) R.LatitudeLimits(2)],[R.LongitudeLimits(2) R.LongitudeLimits(2)],'b');
+    hold on;
+    geoscatter(pointsLat,pointsLon, 'r', 'filled');
+    
+    geolimits([min(pointsLat) - 0.2, max(pointsLat)+ 0.2],[min(pointsLon)- 0.2, max(pointsLon)+ 0.2]);
     geobasemap('openstreetmap');
+    %geobasemap colorterrain
     title(mapTitle);
 end
 
