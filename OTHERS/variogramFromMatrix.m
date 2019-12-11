@@ -1,64 +1,106 @@
-function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling)
+function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling, maxExtent)
 %VARIOGRAMFROMMATRIX This function performs the variogram on an input
 %matrix called data.
+% Inputs:
+%
+%       - data: [Nx, Ny, Ni double] the matrix with the data, it can be a
+%       3D matrix (in that case only the spatial variogram is computed) or
+%       3D with two layers, in that case the spatio-temporal variogram is
+%       computed
+%       - rowSampling, colSampling: sampling of the data in row and col
+%       space, the program will automatically resample everything at the
+%       lower of the two to have uniform gridding
+%       - maxExtent [double] maximum number of pixel for the computation of
+%       the variogram
 
-[Nrows, Ncols]      = size(data);
-overSamplingFactor  = rowSampling/colSampling;
-sampling            = min([rowSampling, colSampling]);
-F                   = griddedInterpolant(double(data));
+[Nrows, Ncols, Ni]      = size(data);
 
-if overSamplingFactor < 1
-    rowVec          = 1:Nrows;
-    colVec          = 1:overSamplingFactor:Ncols;
+if Ni == 1
+    fprintf("Computing just the spatial variogram. \n");
+elseif Ni == 2
+    fprintf("Computing the spatio-temporal variogram. \n");
 else
-    colVec          = 1:Ncols;
-    rowVec          = 1:(1/overSamplingFactor):Nrows;
+    error("The data parameter has more than three layers!");
 end
 
-interpData          = F({rowVec, colVec});
+overSamplingFactor  = rowSampling/colSampling;
+sampling            = min([rowSampling, colSampling]);
 
-maxExtent           = round(min(size(interpData))/2);
+fprintf("Interpolating the dataset to a common grid. \n");
+for ii = 1:Ni
+    F                   = griddedInterpolant(double(data(:,:,ii)));
+    
+    if overSamplingFactor < 1
+        rowVec          = 1:Nrows;
+        colVec          = 1:overSamplingFactor:Ncols;
+    else
+        colVec          = 1:Ncols;
+        rowVec          = 1:(1/overSamplingFactor):Nrows;
+    end
+    
+    if ii == 1
+        interpData = zeros(length(rowVec), length(colVec), Ni);
+    end
+    interpData(:,:,ii)          = F({rowVec, colVec});
+end
 
-f1 = figure; imagesc(data); colorbar; title("Original Data");
+% If I don't provide a max extent, the max extent is half the smaller
+% dimension of the dataset
+if nargin < 4
+    maxExtent           = round(min(size(interpData))/2);
+end
 
-f2 = figure; imagesc(interpData); colorbar; title("Interpolated Data");
+%f1 = figure; imagesc(data); colorbar; title("Original Data");
+%f2 = figure; imagesc(interpData); colorbar; title("Interpolated Data");
+
 fprintf("In the interpolated data each pixel is %.2f x %.2f \n", sampling, sampling);
 fprintf("I'm computing the variogram up to %.2f \n", maxExtent*sampling);
 
-variogr             = zeros(maxExtent, 1);
+variogr             = zeros(maxExtent, Ni);
 distanceAxis        = (1:maxExtent)*sampling;
-h = waitbar(0,'Please wait...');
+h                   = waitbar(0,'Please wait...');
+
 for ii = 1:maxExtent
+    
+    % Shifting matrix (I shift only in x and y, but un-down, left-right)
     shiftMatrix = [[1; 1; 2; 2], [1; -1; 1; -1]*ii];
     difference = zeros(size(interpData,1), size(interpData,2), size(shiftMatrix,1));
-    for jj = 1:size(shiftMatrix, 1)
-        shiftAmount = shiftMatrix(jj,2);
-        shiftDim = shiftMatrix(jj,1);
-        shiftedData = circshift(interpData, shiftAmount, shiftDim);
+    
+    % first run at temporal baseline = 0, second run at temporal baseline
+    % equal to 1
+    for kk = 0:Ni-1
+        temporalShiftData = circshift(interpData, kk, 3);
         
-        if shiftDim == 1
-            if shiftAmount > 0
-                shiftedData(1:shiftAmount, :) = NaN;
+        % Shift left, right, up, down
+        for jj = 1:size(shiftMatrix, 1)
+            shiftAmount     = shiftMatrix(jj,2);
+            shiftDim        = shiftMatrix(jj,1);
+            shiftedData     = circshift(temporalShiftData, shiftAmount, shiftDim);
+            
+            if shiftDim == 1
+                if shiftAmount > 0
+                    shiftedData(1:shiftAmount, :, :)           = NaN;
+                else
+                    shiftedData(end+shiftAmount+1:end, :, :)   = NaN;
+                end
             else
-                shiftedData(end+shiftAmount+1:end, :) = NaN;
+                if shiftAmount > 0
+                    shiftedData(:, 1:shiftAmount, :)           = NaN;
+                else
+                    shiftedData(:, end+shiftAmount+1:end, :)   = NaN;
+                end
             end
-        else
-            if shiftAmount > 0
-                shiftedData(:, 1:shiftAmount) = NaN;
-            else
-                shiftedData(:, end+shiftAmount+1:end) = NaN;
-            end
+            difference(:,:,jj) = (1/Ni)*sum((interpData - shiftedData).^2, 3);
         end
-        
-        difference(:,:,jj) = (interpData - shiftedData).^2;
+        variogr(ii, kk+1) = mean(rmmissing(difference(:)));
+        waitbar(ii/maxExtent,h)
     end
-    variogr(ii) = mean(rmmissing(difference(:)));
-    waitbar(ii/maxExtent,h)
 end
 
 close(h);
-close(f1);
-close(f2);
+fprintf("Done.");
+% close(f1);
+% close(f2);
 
 end
 
