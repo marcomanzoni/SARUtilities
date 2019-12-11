@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling, maxExtent)
 %VARIOGRAMFROMMATRIX This function performs the variogram on an input
 %matrix called data.
@@ -8,25 +7,17 @@ function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSam
 %       3D matrix (in that case only the spatial variogram is computed) or
 %       3D with two layers, in that case the spatio-temporal variogram is
 %       computed
-%       - rowSampling, colSampling: sampling of the data in row and col
+%       - rowSampling, colSampling [double, in meters]: sampling of the data in row and col
 %       space, the program will automatically resample everything at the
 %       lower of the two to have uniform gridding
-%       - maxExtent [double] maximum number of pixel for the computation of
-%       the variogram
-=======
-function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling)
-%VARIOGRAMFROMMATRIX This function performs the variogram of a data inside
-%the matrix data. To plot the result use plot(distanceAxis, variogr)
+%       - maxExtent [double, in pixels] maximum number of pixel for the computation of
+%       the variogram. This parameter is optional. If not given, it's half
+%       of the minimum size of the image
 %
-%   Inputs: 
-%            - data [NrxNcol double matrix]: matrix with the data
-%            - rowSampling [double] size of each cell in the row dimension
-%            - colSampling [double] size of each cell in the col dimension
-%
-%   Output:
-%            - variogr: variogram
-%            - distanceAxis: the x axis of the variogram
->>>>>>> Stashed changes
+%       - output: [maxExtent x Ni] first colum is the variogram at temporal
+%       baseline = 0, second variogram at temporal baseline 1.
+%       - distanceAxis: [maxExtent x Ni] distance axis in meters useful to
+%                       plot the variogram.
 
 [Nrows, Ncols, Ni]      = size(data);
 
@@ -68,8 +59,8 @@ end
 %f1 = figure; imagesc(data); colorbar; title("Original Data");
 %f2 = figure; imagesc(interpData); colorbar; title("Interpolated Data");
 
-fprintf("In the interpolated data each pixel is %.2f x %.2f \n", sampling, sampling);
-fprintf("I'm computing the variogram up to %.2f \n", maxExtent*sampling);
+fprintf("In the interpolated data each pixel is %.2f x %.2f meters\n", sampling, sampling);
+fprintf("I'm computing the variogram up to %.2f meters\n", maxExtent*sampling);
 
 variogr             = zeros(maxExtent, Ni);
 distanceAxis        = (1:maxExtent)*sampling;
