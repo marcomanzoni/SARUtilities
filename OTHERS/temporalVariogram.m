@@ -1,5 +1,11 @@
 function [temporalVariog, temporalAxis] = temporalVariogram(dataCube, dates)
-%UNTITLED This function performs the temporal variogram of a cube of data
+%temporalVariogram This function performs the temporal variogram of a cube of data. 
+%
+%   Inputs:
+%           - dataCube [NrxNazxNi double] datacube with all the APS
+%           - dates [Ni double] acquisition dates for each image inside
+%           dataCube
+%
 
 [Nr, Naz, Ni] = size(dataCube);
 

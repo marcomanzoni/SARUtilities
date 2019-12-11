@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling, maxExtent)
 %VARIOGRAMFROMMATRIX This function performs the variogram on an input
 %matrix called data.
@@ -12,6 +13,20 @@ function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSam
 %       lower of the two to have uniform gridding
 %       - maxExtent [double] maximum number of pixel for the computation of
 %       the variogram
+=======
+function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSampling)
+%VARIOGRAMFROMMATRIX This function performs the variogram of a data inside
+%the matrix data. To plot the result use plot(distanceAxis, variogr)
+%
+%   Inputs: 
+%            - data [NrxNcol double matrix]: matrix with the data
+%            - rowSampling [double] size of each cell in the row dimension
+%            - colSampling [double] size of each cell in the col dimension
+%
+%   Output:
+%            - variogr: variogram
+%            - distanceAxis: the x axis of the variogram
+>>>>>>> Stashed changes
 
 [Nrows, Ncols, Ni]      = size(data);
 
