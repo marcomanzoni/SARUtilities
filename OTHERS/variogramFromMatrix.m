@@ -19,6 +19,12 @@ function [variogr, distanceAxis] = variogramFromMatrix(data, rowSampling, colSam
 %       - distanceAxis: [maxExtent x Ni] distance axis in meters useful to
 %                       plot the variogram.
 
+if isreal(data)
+    realData = true;
+else
+    realData = false;
+end
+
 [Nrows, Ncols, Ni]      = size(data);
 
 if Ni == 1
@@ -96,7 +102,11 @@ for ii = 1:maxExtent
                     shiftedData(:, end+shiftAmount+1:end, :)   = NaN;
                 end
             end
-            difference(:,:,jj) = (1/Ni)*sum((interpData - shiftedData).^2, 3);
+            if realData
+                difference(:,:,jj) = (1/Ni)*sum((interpData - shiftedData).^2, 3);
+            else
+                difference(:,:,jj) = (1/Ni)*sum((angle(interpData.*conj(shiftedData))).^2, 3);
+            end
         end
         variogr(ii, kk+1) = mean(rmmissing(difference(:)));
         waitbar(ii/maxExtent,h)

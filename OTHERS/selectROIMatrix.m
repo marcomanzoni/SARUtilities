@@ -1,12 +1,15 @@
-function [posit, subsetImage] = selectROIMatrix(imma)
+function [posit, subsetImage] = selectROIMatrix(imma, limits)
 %SELECTROIMATRIX Summary of this function goes here
 %   Detailed explanation goes here
 
 figure; imagesc(imma); colorbar;
+if nargin>1
+    caxis(limits);
+end
 xlabel("Pixel Number");
 ylabel("Pixel Number");
 
-h = drawrectangle('Position', [1, 1, 1000, 1000]);
+h = drawrectangle('Position', [1, 1, size(imma,2)/2, size(imma,1)/2]);
 pos = customWait(h);
 
 
